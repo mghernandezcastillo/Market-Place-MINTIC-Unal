@@ -122,6 +122,7 @@ border: 3px solid #283747;
  @media (max-width: 760px) {
   .container_signUp_user{
     width: 80%;
+    margin-top: 15px;
   }
 }
 </style>

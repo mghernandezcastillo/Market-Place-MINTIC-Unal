@@ -230,6 +230,7 @@ let token = localStorage.getItem("token_access");
   height: 100vh;
   flex-wrap: wrap;
   font-family: Arial, Helvetica, sans-serif;
+  margin-bottom: 100px;
 }
 
 .producto span {

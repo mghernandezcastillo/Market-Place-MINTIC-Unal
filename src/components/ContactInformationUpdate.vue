@@ -153,7 +153,7 @@ export default {
 .container_contact_update {
   border: 3px solid #283747;
   border-radius: 10px;
-  width: 25%;
+  width: 80%;
   height: 60%;
   height: fit-content;
 

@@ -121,6 +121,7 @@ export default {
 @media (max-width: 760px) {
   .container_logIn_user{
     width: 80%;
+    margin-top: 15px;
   }
 }
 

@@ -295,6 +295,8 @@ body {
   .nav-items{
     text-align: end;
     margin-right: 15px;
+    width: max-content;
+    padding: 0;
   }
 
   .nav-items li{
