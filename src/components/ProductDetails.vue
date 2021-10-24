@@ -37,8 +37,8 @@
 
 
 
-      <button v-if="is_user" v-on:click="loadUpdateProduct" class="btn_options btn_actualizar">Actualizar datos</button>
-      <button v-if="is_user" v-on:click="loadDeleteProduct" class="btn_options btn_eliminar">Eliminar publicación</button>
+      <button v-if="is_user && is_auth" v-on:click="loadUpdateProduct" class="btn_options btn_actualizar">Actualizar datos</button>
+      <button v-if="is_user && is_auth" v-on:click="loadDeleteProduct" class="btn_options btn_eliminar">Eliminar publicación</button>
       <!--<button v-if="!is_user" v-on:click="loadDeleteProduct" class="btn_options btn_contactar">Contactar vendedor</button>-->
     </div>
 
