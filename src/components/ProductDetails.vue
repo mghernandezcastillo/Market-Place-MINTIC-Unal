@@ -128,7 +128,7 @@ export default {
         localStorage.getItem("token_access") === null ||
         localStorage.getItem("token_refresh") === null
       ) {
-        this.$emit("logOut");
+        this.$emit("productos");
         return;
       }
       await this.verifyToken(); // esto se utiliza para esperar a que la sección de comprobación y actualización delaccess token terminen, y que solo cuando hayan terminado
@@ -204,9 +204,10 @@ let token = localStorage.getItem("token_access");
 
   created: async function () {
     (this.id_producto = localStorage.getItem("id_producto")),
-    this.loadDiv();
+    console.log(this.id_producto)
     this.getAccountData();
     this.getData();
+    this.loadDiv();
     document.addEventListener('click', (e) => {
       if (e.target.id === 'lightboxBg') {
         this.closeLightboxBg();

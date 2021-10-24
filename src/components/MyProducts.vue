@@ -5,12 +5,7 @@
     </button>
   </h1>
   <div v-if="loaded" class="productos">
-    <div
-      v-for="item in productsArray"
-      :key="item"
-      class="listado_productos"
-      v-on:click="getProductId(item.id)"
-    >
+    <div v-for="item in productsArray" :key="item" class="listado_productos" v-on:click="getProductId(item.id)">
       <br />
       <img
         class="ig-img"

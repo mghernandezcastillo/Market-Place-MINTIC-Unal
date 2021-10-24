@@ -76,10 +76,10 @@ export default {
           this.int_to_price_format(this.productsArray)
         });
     },
-    getProductId: function(data){
+    getProductId: function (data) {
       this.datoEnviado = data;
       let id_producto = this.datoEnviado;
-      this.$emit('sendProductId', id_producto)
+      this.$emit("sendProductId", id_producto);
       this.$router.push({ name: "productDetails" });
     },
     int_to_price_format(array){
