@@ -3,10 +3,10 @@
     <div class="container_reset_pasword">
       <h2>Reestablecer contraseña</h2>
       <form v-on:submit.prevent="processResetPassword" autocomplete="off">
-        <input type="text" v-model="reset.token" placeholder="Token" autocomplete="off"/>
+        <input type="text" v-model="reset.token" placeholder="Token" autocomplete="off" required/>
         
         <br />
-        <input type="password" v-model="reset.password" placeholder="Nueva contraseña" autocomplete="new-password" minlength="8"/>
+        <input type="password" v-model="reset.password" placeholder="Nueva contraseña" autocomplete="new-password" minlength="8" required/>
         <span>La contraseña debe tener al menos 8 digitos</span>
         <br />
         <button type="submit">Cambiar contraseña</button>
