@@ -2,22 +2,11 @@
 
   <div class="contact_update">
     <div class="container_contact_update">
-      <h1 class="title">Actualizar datos de contacto</h1>
+      <h1 class="title">Actualizar teléfono de contacto</h1>
 
       <form v-on:submit.prevent="processUpdatePhoneNumber">
         <br />
-        <h4 class="item_title">Actualizar Teléfono</h4>
-
         <input type="number" v-model="account.telefono" placeholder="Teléfono" maxlength="36" id="telefono" required/>
-        <button type="submit">Actualizar</button>
-      </form>
-
-
-      <form v-on:submit.prevent="processUpdateEmail">
-        <br />
-        <h4 class="item_title">Actualizar Correo Electrónico</h4>
-
-        <input type="email" v-model="account.email" placeholder="Correo electrónico" maxlength="36" id="telefono" required/>
         <button type="submit">Actualizar</button>
       </form>
     </div>
@@ -55,40 +44,13 @@ export default {
 
       axios
         .put(
-          `https://database-technodevices.herokuapp.com/telefono/update/${userId}/`,
+          `https://technodevices-bk.herokuapp.comtelefono/update/${userId}/`,
            this.account,
           { headers: { Authorization: `Bearer ${token}` } }
         )
         .then((result) => {
           this.loaded = true; //booleano que se utiliza para renderizar la información del usuario únicamente cuando ya se ha consultado al componente lógico
           console.log("teléfono actualizado")
-          this.loadAccount();
-        })
-        .catch(() => {});
-    },
-
-    processUpdateEmail: async function () {
-      if (
-        localStorage.getItem("token_access") === null ||
-        localStorage.getItem("token_refresh") === null
-      ) {
-        this.$emit("logOut");
-        return;
-      }
-      await this.verifyToken(); // esto se utiliza para esperar a que la sección de comprobación y actualización delaccess token terminen, y que solo cuando hayan terminado
-
-      let token = localStorage.getItem("token_access");
-      let userId = jwt_decode(token).user_id.toString();
-
-      axios
-        .put(
-          `https://database-technodevices.herokuapp.com/email/update/${userId}/`,
-           this.account,
-          { headers: { Authorization: `Bearer ${token}` } }
-        )
-        .then((result) => {
-          this.loaded = true; //booleano que se utiliza para renderizar la información del usuario únicamente cuando ya se ha consultado al componente lógico
-          console.log("email actualizado")
           this.loadAccount();
         })
         .catch(() => {});
@@ -101,7 +63,7 @@ export default {
     verifyToken: function () {
       return axios
         .post(
-          "https://database-technodevices.herokuapp.com/refresh/",
+          "https://technodevices-bk.herokuapp.com/refresh/",
           { refresh: localStorage.getItem("token_refresh") },
           { headers: {} }
         )

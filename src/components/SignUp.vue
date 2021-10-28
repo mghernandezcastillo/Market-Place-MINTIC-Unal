@@ -2,18 +2,17 @@
  <div class="signUp_user">
  <div class="container_signUp_user">
  <h2>Registrarse</h2>
+ <p id="confirmation_sign_up"><strong>El email ya se encuentra registrado</strong></p>
  <form v-on:submit.prevent="processSignUp" >
- <input type="text" v-model="user.username" placeholder="Nombre de usuario">
+ <input type="email" v-model="user.email " placeholder="Correo" required>
+ <br>
+ <input type="password" v-model="user.password" placeholder="Contraseña" required>
  <br>
 
- <input type="password" v-model="user.password" placeholder="Contraseña">
+ <input type="text" v-model="user.account.name" placeholder="Nombre" required>
  <br>
-
- <input type="text" v-model="user.name" placeholder="Nombre">
+ <input type="text" v-model="user.account.telefono" placeholder="Teléfono" required>
  <br>
- <input type="text" v-model="user.account.telefono" placeholder="Teléfono">
- <br>
- <input type="email" v-model="user.account.email " placeholder="Correo">
  <button type="submit">Registrarse</button>
  </form>
  </div>
@@ -26,13 +25,12 @@ export default {
  data: function(){
  return {
  user: {
- username: "",
+ email: "",
  password: "",
- name: "",
  account: {
  lastChangeDate: (new Date()).toJSON().toString(),
  isActive: true,
- email: "",
+  name: "",
  telefono: ""
  }
  }
@@ -41,24 +39,38 @@ export default {
  methods: {
 processSignUp: function(){
  axios.post(
- //"https://database-technodevices.herokuapp.com/user/",
- "https://database-technodevices.herokuapp.com/user/",
+ "https://technodevices-bk.herokuapp.com/user/",
  this.user,
  {headers: {}}
  )
  .then((result) => {
  let dataSignUp = {
- username: this.user.username,
+ email: this.user.email,
  token_access: result.data.access,
  token_refresh: result.data.refresh,
  }
 this.$emit('completedSignUp', dataSignUp)
+ this.user = {
+ email: "",
+ password: "",
+
+ account: {
+ lastChangeDate: (new Date()).toJSON().toString(),
+ isActive: true,
+ name: "",
+ telefono: "",
+ }
+ }
  })
  .catch((error) => {
  console.log(error)
- alert("ERROR: Fallo en el registro.");
+ this.showMessageErrorLogin();
  });
- }
+ },
+  showMessageErrorLogin: function (){
+      let confirmation = document.getElementById("confirmation_sign_up");
+      confirmation.style.display = "inherit";
+    }
  }
 }
 </script>     
@@ -66,7 +78,7 @@ this.$emit('completedSignUp', dataSignUp)
 
 <style>
  .signUp_user{
- margin: 0;
+ margin-top: 20px;
  padding: 0%;
  height: 100%;
  width: 100%;
@@ -79,7 +91,7 @@ this.$emit('completedSignUp', dataSignUp)
 
 border: 3px solid #283747;
  border-radius: 10px;
- width: 25%;
+ width: 70vh;
  height: 60%;
 
  display: flex;
@@ -118,10 +130,14 @@ border: 3px solid #283747;
  border: 1px solid #283747;
  cursor: pointer;
  }
+#confirmation_sign_up{
+  color: #ff0000;
+  display: none;
+}
 
  @media (max-width: 760px) {
   .container_signUp_user{
-    width: 80%;
+    width: 90%;
     margin-top: 15px;
   }
 }

@@ -15,11 +15,15 @@
         </label>
         <br />
         <h4 class="imagen_title">Imagen del producto</h4>
-        <input type="file" @change="updatePhoto" name="photo" class="form-input" required/>
+        <div class="button-wrapper">
+          <span class="label">
+            <strong>Upload File</strong>
+          </span>
+        <input type="file" @change="updatePhoto"  id="upload" name="upload" class="upload-box" required placeholder="Upload File"/>
+        </div>
 
 
         <input type="text" v-model="producto.titulo" placeholder="Titulo del anuncio" maxlength="36" id="titulo" required/>
-        <!--<input type="text" v-model="producto.marca" placeholder="Marca" required/>-->
         
         <select v-model="producto.categoria" class="combo_categorias" id="categoria" v-on:change="traerMarcas" required>
           <option value="" disabled>Categoría</option>
@@ -61,14 +65,10 @@ export default {
         imagen2: "",
         imagen3: "",
         loaded: false,
-        lastChangeDate: new Date().toJSON().toString(),
-        id_producto: "",
+        fecha_actualizacion: this.getDateToday(),
       },
-      title_product: "",
-      description_product: "",
       marcas: [],
       categorias: [],
-      imagen1: "",
     };
   },
 
@@ -81,7 +81,7 @@ export default {
         this.$emit("logOut");
         return;
       }
-      await this.verifyToken(); // esto se utiliza para esperar a que la sección de comprobación y actualización delaccess token terminen, y que solo cuando hayan terminado
+      await this.verifyToken(); 
 
       let token = localStorage.getItem("token_access");
       let userId = jwt_decode(token).user_id.toString();
@@ -89,12 +89,12 @@ export default {
 
       axios
         .put(
-          `https://database-technodevices.herokuapp.com/producto/update/${userId}/${producto}/`,
+          `https://technodevices-bk.herokuapp.com/producto/update/${userId}/${producto}/`,
           this.producto,
           { headers: { Authorization: `Bearer ${token}` } }
         )
         .then((result) => {
-          this.loaded = true; //booleano que se utiliza para renderizar la información del usuario únicamente cuando ya se ha consultado al componente lógico
+          this.loaded = true; 
           this.loadMyProducts();
         })
         .catch(() => {});
@@ -105,7 +105,7 @@ export default {
     },
     traerMarcas: async function () {
       axios
-        .get(`https://database-technodevices.herokuapp.com/marcas/`)
+        .get(`https://technodevices-bk.herokuapp.com/marcas/`)
         .then((result) => {
           this.marcas = []
           for (let index = 0; index < result.data.length; index++) {
@@ -119,7 +119,7 @@ export default {
 
     traerTodasLasCategorias: async function () {
       axios
-        .get(`https://database-technodevices.herokuapp.com/categorias/`)
+        .get(`https://technodevices-bk.herokuapp.com/categorias/`)
         .then((result) => {
           for (let index = 0; index < result.data.length; index++) {
             this.categorias.push(result.data[index]);
@@ -140,7 +140,7 @@ export default {
       }
       
       axios
-        .get(`https://database-technodevices.herokuapp.com/producto/${producto}/`)
+        .get(`https://technodevices-bk.herokuapp.com/producto/${producto}/`)
         .then((response) => {
           this.title_product = response.data[0].titulo;
           this.description_product = response.data[0].descripcion;
@@ -154,7 +154,7 @@ export default {
     verifyToken: function () {
       return axios
         .post(
-          "https://database-technodevices.herokuapp.com/refresh/",
+          "https://technodevices-bk.herokuapp.com/refresh/",
           { refresh: localStorage.getItem("token_refresh") },
           { headers: {} }
         )
@@ -173,6 +173,19 @@ export default {
       };
       reader.readAsDataURL(file);
     },
+
+      getDateToday: function (){
+      let date = new Date()
+
+      let day = date.getDate()
+      let month = date.getMonth() + 1
+      let year = date.getFullYear()
+      if(month < 10){
+        return(`${day}-0${month}-${year}`)
+      }else{
+        return(`${day}-${month}-${year}`)
+      }
+    }
   },
   created: async function () {
     (this.id_producto = localStorage.getItem("id_producto")),
@@ -191,6 +204,38 @@ export default {
   display: flex;
   justify-content: center;
   margin-top: 70px;
+}
+
+.button-wrapper {
+  position: relative;
+  width: 150px;
+  text-align: center;
+  margin: 20% auto;
+}
+
+.button-wrapper span.label {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  width: 100%;
+  background: #00bfff;
+  cursor: pointer;
+  color: #fff;
+  padding: 10px 0;
+  text-transform:uppercase;
+  font-size:12px;
+}
+
+#upload {
+    display: inline-block;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 50px;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
 }
 
 .title{

@@ -2,14 +2,17 @@
   <div class="logIn_user">
     <div class="container_logIn_user">
       <h2>Iniciar sesión</h2>
+      <p id="confirmation"><strong>Contraseña o email invalido</strong></p>
       <form v-on:submit.prevent="processLogInUser">
-        <input type="text" v-model="user.username" placeholder="Username" />
+        <input type="text" v-model="user.email" placeholder="Email" required/>
         <br />
-        <input type="password" v-model="user.password" placeholder="Password" />
+        <input type="password" v-model="user.password" placeholder="Password" required/>
         <br />
         <button type="submit">Iniciar Sesion</button>
 
-        <a v-on:click="loadSignUp" class="link_registrarme"><strong>registrarse</strong></a>
+        <a v-on:click="loadSignUp" class="link_registrarme"><strong>Registrarse</strong></a>
+        <br>
+        <a v-on:click="loadResetPasswordRequirement" class="link_olvido_contraseña"><strong>Olvidé mi contraseña</strong></a>
       </form>
     </div>
   </div>
@@ -22,7 +25,7 @@ export default {
   data: function () {
     return {
       user: {
-        username: "",
+        email: "",
         password: "",
       },
     };
@@ -30,13 +33,12 @@ export default {
   methods: {
     processLogInUser: function () {
       axios
-        //.post("https://database-technodevices.herokuapp.com/login/",
-        .post("https://database-technodevices.herokuapp.com/login/", this.user, {
+        .post("https://technodevices-bk.herokuapp.com/login/", this.user, {
           headers: {},
         })
         .then((result) => {
           let dataLogIn = {
-            username: this.user.username,
+            email: this.user.email,
             token_access: result.data.access,
             token_refresh: result.data.refresh,
           };
@@ -44,19 +46,27 @@ export default {
         })
         .catch((error) => {
           if (error.response.status == "401")
-            alert("ERROR 401: Credenciales Incorrectas.");
+          this.showMessageErrorLogin();
         });
     },
     loadSignUp: function () {
       this.$router.push({ name: "signUp" });
     },
-  },
+    loadResetPasswordRequirement: function () {
+      this.$router.push({ name: "resetPasswordRequirement" });
+    },
+    showMessageErrorLogin: function (){
+      let confirmation = document.getElementById("confirmation");
+      confirmation.style.display = "inherit";
+    }
+    },
 };
 </script>
 
 
 <style>
 .logIn_user {
+  margin-top: 20px;
   height: 70%;
   padding: 0%;
 
@@ -109,18 +119,31 @@ export default {
 }
 
 .link_registrarme{
-  color: #a82e67;
+  color: #2e5fa8 !important;
   font-size: 18px;
 }
 .link_registrarme:hover{
+  color: #0066ff !important;
+  cursor: pointer;
+}
+
+.link_olvido_contraseña{
+  color: #a82e67;
+  font-size: 15px;
+}
+.link_olvido_contraseña:hover{
   color: #ff0077;
   cursor: pointer;
-  
+}
+
+#confirmation{
+  color: #ff0000;
+  display: none;
 }
 
 @media (max-width: 760px) {
   .container_logIn_user{
-    width: 80%;
+    width: 90%;
     margin-top: 15px;
   }
 }

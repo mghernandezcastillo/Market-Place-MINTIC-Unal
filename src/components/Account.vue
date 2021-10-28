@@ -11,7 +11,7 @@
       Teléfono: <span>{{ telefono }}</span>
     </h2>
 
-    <button v-on:click="loadContactInformationUpdate" class="btn_actualizar">Actualizar información</button>
+    <button v-on:click="loadContactInformationUpdate" class="btn_actualizar">Actualizar teléfono</button>
 
 
   </div>
@@ -44,14 +44,14 @@ let token = localStorage.getItem("token_access");
       let userId = jwt_decode(token).user_id.toString();
 
       axios
-        .get(`https://database-technodevices.herokuapp.com/user/${userId}/`, {
+        .get(`https://technodevices-bk.herokuapp.com/user/${userId}/`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((result) => {
           console.log(result.data)
-          this.name = result.data.name;
+          this.name = result.data.account.name;
           this.telefono = result.data.account.telefono;
-          this.email = result.data.account.email;
+          this.email = result.data.email;
          // this.email = result.data.email;
           //this.telefono = result.data.telefono;
           this.loaded = true; //booleano que se utiliza para renderizar la información del usuario únicamente cuando ya se ha consultado al componente lógico
@@ -63,7 +63,7 @@ let token = localStorage.getItem("token_access");
     verifyToken: function () {
       return axios
         .post(
-          "https://database-technodevices.herokuapp.com/refresh/",
+          "https://technodevices-bk.herokuapp.com/refresh/",
           { refresh: localStorage.getItem("token_refresh") },
           { headers: {} }
         )
@@ -86,7 +86,7 @@ let token = localStorage.getItem("token_access");
 
 <style>
 .information {
-  margin: 0;
+  margin-top: 20px;
   padding: 0%;
   width: 100%;
   height: 100%;
@@ -103,6 +103,7 @@ let token = localStorage.getItem("token_access");
 .information h2 {
   font-size: 40px;
   color: #283747;
+  margin: 20px;
 }
 .information span {
   color: #3782d1;
@@ -131,5 +132,10 @@ let token = localStorage.getItem("token_access");
   color: #283747;
   display: contents;
 }
+
+.information span{
+  font-size: 18px;
+}
+
 }
 </style>

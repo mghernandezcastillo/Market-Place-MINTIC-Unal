@@ -1,6 +1,6 @@
 <template>
-    <div class="header-mobile">
-      <img src="https://database-technodevices.herokuapp.com/media/imagenes/logotechnodevices.png" alt="" width="160" class="logo"/>
+    <div class="header-mobile"><a href="#"></a>
+      <img src="https://technodevices-bk.herokuapp.com/media/imagenes/logotechnodevices.png" alt="" width="160" class="logo" id="logo"/>
       <button v-on:click="reloadPage" class="btn_tienda">
         <strong>TIENDA</strong>
       </button>
@@ -18,11 +18,9 @@
     </div>
   <div id="app" class="app">
 
-<!-- MOBILE MENU -->
 
-<!-- DESKTOP MENU -->
     <div class="header">
-        <img src="https://database-technodevices.herokuapp.com/media/imagenes/logotechnodevices.png" alt="" width="160" class="logo"/>
+      <a href="/"><img src="https://technodevices-bk.herokuapp.com/media/imagenes/logotechnodevices.png" alt="" width="160" class="logo"/></a>
       <button v-on:click="loadProducts" class="btn_tienda">
         <strong>TIENDA</strong>
       </button>
@@ -55,8 +53,6 @@
       </nav>
     </div>
     <div class="main-component">
-      <!-- funciones a travez de las cuales los hijos van a comunicarse con el padre -->
-      <!-- se implementan en export default -->
       <router-view
         v-on:completedLogIn="completedLogIn"
         v-on:completedSignUp="completedSignUp"
@@ -66,7 +62,7 @@
       </router-view>
     </div>
     <div class="footer">
-    <p><strong>© 2021 TECHNO DEVICES</strong></p>
+    <p><strong>© 2021 Project MINTIC UNAL By Michael Hernández</strong></p>
     </div>
   </div>
 
@@ -74,24 +70,19 @@
 
 <script>
 export default {
-  name: "App", // nombre del componente
+  name: "App", 
   data: function () {
-    // informacion que va a tener el componente y que se va apoder mostrar dentro el template
     return {
       is_auth: false,
       mounted: function (){
       document.title = 'TechnoDevices Marketplace'
-      }
+      },
     };
   },
-  components: {}, //componentes con los que se va a comunicar
+  components: {},
   methods: {
-    // metodos que definen el comportamiento que tendrá la aplicación
     verifyAuth: function () {
-      this.is_auth = localStorage.getItem("isAuth") || false;
-
-      if (this.is_auth == false) this.$router.push({ name: "productos" });
-      else this.$router.push({ name: "productos" });
+      this.is_auth = localStorage.getItem("isAuth");
     },
     loadLogIn: function () {
       this.$router.push({ name: "logIn" });
@@ -101,11 +92,11 @@ export default {
     },
     completedLogIn: function (data) {
       localStorage.setItem("isAuth", true);
-      localStorage.setItem("username", data.username);
+      localStorage.setItem("email", data.email);
       localStorage.setItem("token_access", data.token_access);
       localStorage.setItem("token_refresh", data.token_refresh);
-      //alert("Autenticación Exitosa");
       this.verifyAuth();
+      this.loadHome();
     },
     completedSignUp: function (data) {
       alert("Registro Exitoso");
@@ -143,10 +134,9 @@ export default {
     }
   },
   created: function () {
-    // funciones que se ejecutan cada vez que se ejecuta el componente
     this.verifyAuth();
     this.mounted();
-  },
+},
 };
 </script>
 
@@ -241,6 +231,10 @@ body {
   padding-top: 10px;
   padding-bottom: 10px;
   margin: 5px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  font-size: 17px;
 }
 
 .boton_vender{
@@ -264,7 +258,7 @@ body {
 
 .main-component {
   height: 100%;
-  margin: 0%;
+  margin-top: 20px;
   padding: 0%;
   background: #fdfefe;
 }
@@ -297,6 +291,7 @@ body {
     margin-right: 15px;
     width: max-content;
     padding: 0;
+    margin-top: 15px;
   }
 
   .nav-items li{

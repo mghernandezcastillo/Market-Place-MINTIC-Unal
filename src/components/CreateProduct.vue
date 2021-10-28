@@ -14,10 +14,19 @@
 
          <!-- CARGA DE IMAGEN DEL PRODUCTO CON FUNCIÓN PARA BASE64 TIPO FILE-->
         <h4 class="imagen_title">Imagen del producto</h4>
-        <input type="file" @change="updatePhoto" name="photo" class="form_input" required />
+        
+        <div class="button-wrapper">
+          <span class="label_upload">
+            <strong>Upload File</strong>
+          </span>
+        <input type="file" @change="updatePhoto"  id="upload" name="upload" class="upload-box" required placeholder="Upload File"/>
+        </div>
 
         <!-- TITULO PUBLICACIÓN-->
         <input type="text" v-model="producto.titulo" placeholder="Título del anuncio" maxlength="36" required />
+
+
+
 
 
         <!-- COMBOBOX CATEGORÍAS-->
@@ -38,7 +47,10 @@
 
         <!-- PRECIO PRODUCTO-->
         <input type="number" v-model="producto.precio" placeholder="Precio" required/>
+
+        <!-- DESCRIPCIÓN PRODUCTO-->
         <input type="text" v-model="producto.descripcion" placeholder="Descripción" required/>
+
         <button type="submit">Crear</button>
       </form>
 
@@ -67,7 +79,7 @@ export default {
         imagen2: "",
         imagen3: "",
         loaded: false,
-        lastChangeDate: new Date().toJSON().toString(),
+        fecha_actualizacion: this.getDateToday(),
       },
       marcas: [],
       categorias: [],
@@ -90,7 +102,7 @@ export default {
 
       axios
         .post(
-          `https://database-technodevices.herokuapp.com/producto/${userId}/create/`,
+          `https://technodevices-bk.herokuapp.com/producto/${userId}/create/`,
           this.producto,
           { headers: { Authorization: `Bearer ${token}` } }
         )
@@ -98,12 +110,14 @@ export default {
           this.loaded = true; //booleano que se utiliza para renderizar la información del usuario únicamente cuando ya se ha consultado al componente lógico
           this.loadMyProducts();
         })
-        .catch(() => {});
+        .catch((error) => {
+          console.log(error)
+        });
     },
 
     traerTodasLasCategorias: async function () {
       axios
-        .get(`https://database-technodevices.herokuapp.com/categorias/`)
+        .get(`https://technodevices-bk.herokuapp.com/categorias/`)
         .then((result) => {
           for (let index = 0; index < result.data.length; index++) {
             this.categorias.push(result.data[index]);
@@ -114,7 +128,7 @@ export default {
     
     traerMarcas: async function () {
       axios
-        .get(`https://database-technodevices.herokuapp.com/marcas/`)
+        .get(`https://technodevices-bk.herokuapp.com/marcas/`)
         .then((result) => {
           this.marcas = []
           for (let index = 0; index < result.data.length; index++) {
@@ -133,7 +147,7 @@ export default {
     verifyToken: function () {
       return axios
         .post(
-          "https://database-technodevices.herokuapp.com/refresh/",
+          "https://technodevices-bk.herokuapp.com/refresh/",
           { refresh: localStorage.getItem("token_refresh") },
           { headers: {} }
         )
@@ -152,9 +166,22 @@ export default {
       };
       reader.readAsDataURL(file);
     },
+    getDateToday: function (){
+      let date = new Date()
+
+      let day = date.getDate()
+      let month = date.getMonth() + 1
+      let year = date.getFullYear()
+      if(month < 10){
+        return(`${day}-0${month}-${year}`)
+      }else{
+        return(`${day}-${month}-${year}`)
+      }
+    }
   },
   created: async function () {
     this.traerTodasLasCategorias();
+    console.log(this.getDateToday())
     
   },
 };
@@ -175,6 +202,7 @@ export default {
 
 .title {
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 40px !important;
 }
 
 .imagen_title {
@@ -207,8 +235,41 @@ export default {
   align-items: center;
 }
 
-.form_input{
-  background-color: #ffffff;
+.button-wrapper {
+  position: relative;
+  width: 150px;
+  text-align: center;
+  margin: 20% auto;
+  cursor: pointer;
+}
+
+.button-wrapper span.label_upload {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  width: 100%;
+  background: #00bfff;
+  cursor: pointer;
+  color: #fff;
+  padding: 10px 0;
+  text-transform:uppercase;
+  font-size:12px;
+}
+
+#upload {
+    display: inline-block;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 50px;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-box{
+  cursor: pointer;
 }
 
 .product_create h2 {

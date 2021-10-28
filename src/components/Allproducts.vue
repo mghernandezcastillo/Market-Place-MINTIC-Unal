@@ -12,7 +12,7 @@
 <h6 class="title_disponibles">Productos Disponibles</h6>
   <div v-if="loaded" class="productos">
     
-    <div v-for="item in productsArray" :key="item" class="listado_productos" v-on:click="getProductId(item.id)">
+    <div v-for="item in datosPaginados" :key="item" class="listado_productos" v-on:click="getProductId(item.id)">
       <br />
       <img class="ig-img" :src="item.imagen1" alt="image" width="200" height="200"/>
       <h3>
@@ -21,30 +21,66 @@
       <h3>
         <span class="titulo_producto">{{ item.titulo }}</span>
       </h3>
-      <!--
-      <h3>
-        Vendedor: <span>{{ item.vendedor }}</span>
-      </h3>
-      <h3>
-        Marca: <span>{{ item.marca }}</span>
-      </h3>
-
-      <h3>
-        Descripción: <span>{{ item.descripcion }}</span>
-      </h3>
-      
-      <h3 v-if="item.nuevo">
-        Estado: <span >Nuevo</span>
-      </h3>
-      <h3 v-else>
-        Estado: <span >Usado</span>
-      </h3>
-      <h3>
-        Fecha publicación: <span>{{ item.fecha_publicacion }}</span>
-      </h3>
-      -->
     </div>
+
+    <!---------------------------- VERSION CON TABLAS ------------------------------------------
+    <div class="row">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Imagen</th>
+      <th scope="col">Precio</th>
+      <th scope="col">Título</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="item in datosPaginados" :key="item" class="listado_productos" v-on:click="getProductId(item.id)">
+
+      <td>
+        <img class="ig-img" :src="item.imagen1" alt="image" width="200" height="200"/>
+      </td>
+
+      <td>
+      <h3>
+        <span class="precio">{{ item.precio }}</span>
+      </h3>
+      </td>
+      
+      <td>
+        <h3>
+        <span class="titulo_producto">{{ item.titulo }}</span>
+        </h3>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item" v-on:click="getPreviusPage()"><a class="page-link" href="#">Previous</a></li>
+
+    <li v-for="pagina in totalPaginas()" :key="pagina" v-on:click="getDataPagina(pagina)" class="page-item"><a class="page-link" href="#">{{pagina}}</a></li>
+
+    <li class="page-item" v-on:click="getNextPage()"><a class="page-link" href="#">Next</a></li>
+  </ul>
+</nav>
+
+    </div>-->
+
   </div>
+  <div class="navigation_container">
+      <nav aria-label="Page navigation" class="page_navigation">
+    <ul class="pagination">
+      <li class="page-item" v-on:click="getPreviusPage()"><a class="page-link" href="#"><strong>Anterior</strong></a></li>
+
+      <li v-for="pagina in totalPaginas()" :key="pagina" v-on:click="getDataPagina(pagina)" class="page-item"><a class="page-link" href="#"><strong>{{pagina}}</strong></a></li>
+
+      <li class="page-item" v-on:click="getNextPage()"><a class="page-link" href="#"><strong>Siguiente</strong></a></li>
+      
+    </ul>
+    <div class="pagina_actual"><strong>página actual</strong><h6 class="num_pag"><strong>{{ paginaActual }}</strong></h6></div>
+    </nav>   
+  </div>
+
       
 </template>
 <script>
@@ -64,16 +100,22 @@ export default {
       imagen1: "",
       productsArray: [],
       loaded: true,
+      elementosPorPagina: 5,
+      datosPaginados: [],
+      paginaActual: 1,
     };
   },
   
+
+
   methods: {
     getData: async function () {
       axios
-        .get(`https://database-technodevices.herokuapp.com/productos/`)
+        .get(`https://technodevices-bk.herokuapp.com/productos/`)
         .then((response) => {
           this.productsArray = response.data;
           this.int_to_price_format(this.productsArray)
+          this.getDataPagina(1);
         });
     },
     getProductId: function (data) {
@@ -89,7 +131,34 @@ export default {
       for (let index = 0; index < array.length; index++) {
         array[index].precio = (numberFormat2.format(array[index].precio));
       }
-    }
+    },
+    totalPaginas(){
+      return Math.ceil(this.productsArray.length/this.elementosPorPagina)
+    },
+
+    getDataPagina(noPagina){
+      this.paginaActual = noPagina
+      this.datosPaginados = [];
+      let ini = (noPagina * this.elementosPorPagina) - this.elementosPorPagina;
+      let fin = (noPagina * this.elementosPorPagina);
+      this.datosPaginados = this.productsArray.slice(ini,fin);
+    },
+
+    getPreviusPage(){
+      if(this.paginaActual > 1){
+        this.paginaActual--;
+      }
+      this.getDataPagina(this.paginaActual);
+      
+    },
+
+    getNextPage(){
+      if(this.paginaActual < this.totalPaginas()){
+        this.paginaActual++;
+      }
+      this.getDataPagina(this.paginaActual);
+      
+    },
 
   },
   created: async function () {
@@ -191,6 +260,7 @@ export default {
 .productos span {
   color: #58af4f;
   font-weight: bold;
+  font-size: 20px;
 }
 
 .precio{
@@ -219,12 +289,27 @@ export default {
   cursor: pointer;
 }
 
+.navigation_container{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.num_pag{
+  color: #2570d1;
+}
+
+
  @media (max-width: 760px) {
   .title_page{
     font-size: 20px !important;
   }
   .title_disponibles{
     font-size: 18px !important;
+  }
+
+  .ig-img{
+    margin-bottom: 10px !important;
   }
 }
 </style>

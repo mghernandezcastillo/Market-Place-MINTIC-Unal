@@ -11,12 +11,14 @@ import MyProducts from './components/MyProducts.vue'
 import UpdateProduct from './components/UpdateProduct.vue'
 import DeleteProduct from './components/DeleteProduct.vue'
 import ContactInformationUpdate from './components/ContactInformationUpdate.vue'
+import ResetPasswordRequirement from './components/ResetPasswordRequirement.vue'
+import ResetPasswordConfirm from './components/ResetPasswordConfirm.vue'
 
 const routes = [
   {
     path: '/', // raiz 
     name: 'root', //nombre identificador de la ruta del componente
-    component: App // encargado de pintar la raiz
+    component: Allproducts // encargado de pintar la raiz
   },
   {
     path: '/user/logIn', //ruta para acceder
@@ -72,6 +74,16 @@ const routes = [
     path: '/user/ContactInformationUpdate', //ruta para acceder
     name: 'contactInformationUpdate',
     component: ContactInformationUpdate
+  },
+  {
+    path: '/user/ResetPasswordRequirement', //ruta para acceder
+    name: 'resetPasswordRequirement',
+    component: ResetPasswordRequirement
+  },
+  {
+    path: '/user/ResetPasswordConfirm', //ruta para acceder
+    name: 'resetPasswordConfirm',
+    component: ResetPasswordConfirm
   },
 ]
 

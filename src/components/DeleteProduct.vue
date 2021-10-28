@@ -37,7 +37,7 @@ export default {
 
       axios
         .delete(
-          `https://database-technodevices.herokuapp.com/producto/remove/${userId}/${producto}/`,
+          `https://technodevices-bk.herokuapp.com/producto/remove/${userId}/${producto}/`,
           { headers: { Authorization: `Bearer ${token}` } }
         )
         .then((result) => {
@@ -50,7 +50,7 @@ export default {
     verifyToken: function () {
       return axios
         .post(
-          "https://database-technodevices.herokuapp.com/refresh/",
+          "https://technodevices-bk.herokuapp.com/refresh/",
           { refresh: localStorage.getItem("token_refresh") },
           { headers: {} }
         )

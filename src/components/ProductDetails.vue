@@ -28,18 +28,18 @@
         Vendedor: <span>{{ vendedor }}</span>
       </h3>
       <h3 class="label_item">
-        Teléfono Contácto: <span >{{ telefono_contacto }}</span>
+        Teléfono Contácto: <span ><a :href="'http://wa.me/' + 57 +  telefono_contacto " target="blank">{{telefono_contacto}}</a></span>
       </h3>
 
       <h3 class="label_item">
         Correo Contácto: <span >{{ email_contacto }}</span>
       </h3>
 
-
-
+      <div class="btns_product_options">
       <button v-if="is_user && is_auth" v-on:click="loadUpdateProduct" class="btn_options btn_actualizar">Actualizar datos</button>
       <button v-if="is_user && is_auth" v-on:click="loadDeleteProduct" class="btn_options btn_eliminar">Eliminar publicación</button>
-      <!--<button v-if="!is_user" v-on:click="loadDeleteProduct" class="btn_options btn_contactar">Contactar vendedor</button>-->
+      </div>
+
     </div>
 
   </div>
@@ -64,7 +64,7 @@ export default {
       descripcion: "",
       nuevo: false,
       categoria: "",
-      fecha_publicacion: "",
+      fecha_actualizacion: "",
       imagen1: "",
       productsArray: [],
       loaded: true,
@@ -92,20 +92,21 @@ export default {
       }
       
       axios
-        .get(`https://database-technodevices.herokuapp.com/producto/${producto}/`)
+        .get(`https://technodevices-bk.herokuapp.com/producto/${producto}/`)
         .then((response) => {
+          console.log(response.data)
           this.titulo = response.data[0].titulo;
           let datosVendedor = response.data[0].vendedor.split("-");
-          this.vendedor = datosVendedor[0];
+          console.log(datosVendedor)
           this.idVendedor = datosVendedor[1];
-          this.vendedor_id = response.data[0].vendedor;
+          this.vendedor = datosVendedor[0];
           this.precio = response.data[0].precio
           this.int_to_price_format(this.precio)
           this.marca = response.data[0].marca;
           this.descripcion = response.data[0].descripcion;
           this.nuevo = response.data[0].nuevo;
           this.categoria = response.data[0].categoria;
-          this.fecha_publicacion = response.data[0].fecha_publicacion;
+          this.fecha_publicacion = response.data[0].fecha_actualizacion;
           this.telefono_contacto = response.data[0].telefono_contacto;
           this.email_contacto = response.data[0].email_contacto;
           this.imagen1 = response.data[0].imagen1;
@@ -116,10 +117,9 @@ export default {
 
     getContactData: async function (idvendedor) {
       axios
-        .get(`https://database-technodevices.herokuapp.com/contacto/${idvendedor}/`)
+        .get(`https://technodevices-bk.herokuapp.com/contacto/${idvendedor}/`)
         .then((response) => {
           this.telefono_contacto = response.data[0].telefono;
-          this.email_contacto = response.data[0].email;
         });
     },
 
@@ -137,11 +137,12 @@ let token = localStorage.getItem("token_access");
       let userId = jwt_decode(token).user_id.toString();
 
       axios
-        .get(`https://database-technodevices.herokuapp.com/user/${userId}/`, {
+        .get(`https://technodevices-bk.herokuapp.com/user/${userId}/`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((result) => {
-          this.name = result.data.name;
+          console.log(result.data)
+          this.name = result.data.account.name;
           this.loaded = true;
           this.is_user = this.name == this.vendedor
         })
@@ -152,7 +153,7 @@ let token = localStorage.getItem("token_access");
     verifyToken: function () {
       return axios
         .post(
-          "https://database-technodevices.herokuapp.com/refresh/",
+          "https://technodevices-bk.herokuapp.com/refresh/",
           { refresh: localStorage.getItem("token_refresh") },
           { headers: {} }
         )
@@ -203,8 +204,8 @@ let token = localStorage.getItem("token_access");
   },
 
   created: async function () {
+    window.scrollTo(0,0);
     (this.id_producto = localStorage.getItem("id_producto")),
-    console.log(this.id_producto)
     this.getAccountData();
     this.getData();
     this.loadDiv();
@@ -237,6 +238,7 @@ let token = localStorage.getItem("token_access");
 .producto span {
   color: #ffffff;
   font-weight: bold;
+  font-size: 20px;
 }
 
 .image_container{
@@ -272,6 +274,8 @@ let token = localStorage.getItem("token_access");
 
 .label_item{
   color: aquamarine !important;
+  font-size: 23px;
+  
 }
 
 .titulo{
@@ -295,6 +299,11 @@ let token = localStorage.getItem("token_access");
   padding-right: 5px;
   padding-left: 5px;
   background-color: #283747;
+}
+
+.btns_product_options{
+  display: flex;
+  justify-content: center;
 }
 
 .btn_eliminar{

@@ -1,7 +1,7 @@
 <template>
   <div class="greetings">
     <h1>
-      ¡Bienvenido <span> {{ username }} </span>!
+      ¡Bienvenido <span> {{ email }} </span>!
     </h1>
   </div>
   <button class="btn_publicar" v-on:click="loadCreateProduct">
@@ -13,7 +13,7 @@ export default {
   name: "Home",
   data: function () {
     return {
-      username: localStorage.getItem("username") || "none",
+      email: localStorage.getItem("email") || "none",
     };
   },
   methods: {
@@ -66,6 +66,9 @@ export default {
   .greetings h1 {
     font-size: 30px;
     color: #283747;
+  }
+.greetings span {
+    font-size: 18px;
   }
 }
 </style>

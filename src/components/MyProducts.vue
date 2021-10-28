@@ -20,28 +20,7 @@
       <h3>
         <span class="item_titulo">{{ item.titulo }}</span>
       </h3>
-      <!--
-      <h3>
-        Vendedor: <span>{{ item.vendedor }}</span>
-      </h3>
-      <h3>
-        Marca: <span>{{ item.marca }}</span>
-      </h3>
 
-      <h3>
-        Descripción: <span>{{ item.descripcion }}</span>
-      </h3>
-      
-      <h3 v-if="item.nuevo">
-        Estado: <span >Nuevo</span>
-      </h3>
-      <h3 v-else>
-        Estado: <span >Usado</span>
-      </h3>
-      <h3>
-        Fecha publicación: <span>{{ item.fecha_publicacion }}</span>
-      </h3>
-      -->
     </div>
     
   </div>
@@ -76,14 +55,12 @@ export default {
         this.$emit("logOut");
         return;
       }
-      await this.verifyToken(); // esto se utiliza para esperar a que la sección de comprobación y actualización delaccess token terminen, y que solo cuando hayan terminado
-
+      await this.verifyToken(); 
       let token = localStorage.getItem("token_access");
       let userId = jwt_decode(token).user_id.toString();
 
       axios
-        //.get(`https://database-technodevices.herokuapp.com/productos/`)
-        .get(`https://database-technodevices.herokuapp.com/productos/${userId}/`,
+        .get(`https://technodevices-bk.herokuapp.com/productos/${userId}/`,
         { headers: { Authorization: `Bearer ${token}` } }
         )
         
@@ -104,7 +81,7 @@ export default {
     verifyToken: function () {
       return axios
         .post(
-          "https://database-technodevices.herokuapp.com/refresh/",
+          "https://technodevices-bk.herokuapp.com/refresh/",
           { refresh: localStorage.getItem("token_refresh") },
           { headers: {} }
         )
