@@ -6,7 +6,8 @@
         <input type="text" v-model="reset.token" placeholder="Token" autocomplete="off"/>
         
         <br />
-        <input type="password" v-model="reset.password" placeholder="Nueva contraseña" autocomplete="new-password"/>
+        <input type="password" v-model="reset.password" placeholder="Nueva contraseña" autocomplete="new-password" minlength="8"/>
+        <span>La contraseña debe tener al menos 8 digitos</span>
         <br />
         <button type="submit">Cambiar contraseña</button>
       </form>
@@ -43,8 +44,9 @@ export default {
           
         })
         .catch((error) => {
-          if (error.response.status == "401")
-            alert("ERROR 401: Credenciales Incorrectas.");
+          console.log(error)
+          if (error.response.status == "404")
+            alert("ERROR 401: Token inválido.");
         });
     },
     lodadLogin: function () {

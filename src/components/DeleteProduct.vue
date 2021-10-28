@@ -111,6 +111,7 @@ export default {
   margin-bottom: 5px;
 }
 
+
 .container_product_delete {
   border: 3px solid #283747;
   border-radius: 10px;
@@ -146,6 +147,7 @@ export default {
   border-radius: 5px;
   padding: 10px 25px;
   margin: 5px 0 25px 0;
+  place-content: center;
 }
 .product_delete button:hover {
   color: #e5e7e9;
