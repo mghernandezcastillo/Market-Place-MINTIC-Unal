@@ -44,7 +44,7 @@ export default {
 
       axios
         .put(
-          `https://technodevices-bk.herokuapp.comtelefono/update/${userId}/`,
+          `https://technodevices-bk.herokuapp.com/telefono/update/${userId}/`,
            this.account,
           { headers: { Authorization: `Bearer ${token}` } }
         )
